@@ -1,32 +1,22 @@
+import * as Sentry from '@sentry/react'
 import { QueryClientProvider } from '@tanstack/react-query'
-import { RouterProvider, createRouter } from '@tanstack/react-router'
+import { RouterProvider } from '@tanstack/react-router'
 
-import { ThemeProvider } from './lib/theme-provider'
-import { queryClient } from './lib/tanstack-query'
-import { routeTree } from './routeTree.gen'
+import { sentryErrorFallback } from '#/components/pages/sentry-error-fallback'
+import { router } from '#/lib/router'
+import { queryClient } from '#/lib/tanstack-query'
+import { ThemeProvider } from '#/lib/theme-provider'
 import './styles.css'
-
-const router = createRouter({
-  routeTree,
-  context: { queryClient },
-  defaultPreload: 'intent',
-  defaultPreloadStaleTime: 0,
-  scrollRestoration: true,
-})
-
-declare module '@tanstack/react-router' {
-  interface Register {
-    router: typeof router
-  }
-}
 
 function App() {
   return (
-    <ThemeProvider>
-      <QueryClientProvider client={queryClient}>
-        <RouterProvider router={router} />
-      </QueryClientProvider>
-    </ThemeProvider>
+    <Sentry.ErrorBoundary fallback={sentryErrorFallback}>
+      <ThemeProvider>
+        <QueryClientProvider client={queryClient}>
+          <RouterProvider router={router} />
+        </QueryClientProvider>
+      </ThemeProvider>
+    </Sentry.ErrorBoundary>
   )
 }
 

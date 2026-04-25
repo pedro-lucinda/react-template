@@ -2,6 +2,7 @@
   "include": [
     "**/*.ts",
     "**/*.tsx",
+    "src/vite-env.d.ts",
     "eslint.config.js",
     "prettier.config.js",
     "vite.config.js"
